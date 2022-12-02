@@ -6,7 +6,7 @@
 /*   By: vmustone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:10:24 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/01 13:01:57 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/01 18:08:53 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define GET_NEXT_LINE_BONUS_H
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif

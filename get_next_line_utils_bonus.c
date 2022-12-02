@@ -6,7 +6,7 @@
 /*   By: vmustone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:09:42 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/01 13:01:53 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/01 16:49:15 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ void	*ft_calloc(size_t count, size_t size)
 	if ((size_t)-1 / count < size)
 		return (NULL);
 	ptr = (void *)malloc(count * size);
-	if (ptr)
-		ft_bzero(ptr, (count * size));
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, (count * size));
 	return (ptr);
 }

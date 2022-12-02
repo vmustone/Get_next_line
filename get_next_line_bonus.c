@@ -6,13 +6,13 @@
 /*   By: vmustone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:08:09 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/01 12:39:45 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/02 11:14:48 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-char	*join(char *stash, char *buf)
+static char	*join(char *stash, char *buf)
 {
 	char	*temp;
 
@@ -21,7 +21,7 @@ char	*join(char *stash, char *buf)
 	return (temp);
 }
 
-char	*after_newline(char *stash)
+static char	*after_newline(char *stash)
 {
 	int		i;
 	int		j;
@@ -49,7 +49,7 @@ char	*after_newline(char *stash)
 	return (end_line);
 }
 
-char	*find_newline(char *stash)
+static char	*find_newline(char *stash)
 {
 	int		i;
 	char	*line_ret;
@@ -60,6 +60,8 @@ char	*find_newline(char *stash)
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	line_ret = (char *)malloc(sizeof(char) * (i + 2));
+	if (!line_ret)
+		return (NULL);
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 	{
@@ -72,13 +74,11 @@ char	*find_newline(char *stash)
 	return (line_ret);
 }
 
-char	*read_and_stash(int fd, char *ret)
+static char	*read_and_stash(int fd, char *ret)
 {
 	int		bytes_read;
 	char	*buf;
 
-	if (!ret)
-		ret = ft_calloc(1, 1);
 	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
@@ -93,6 +93,8 @@ char	*read_and_stash(int fd, char *ret)
 		}
 		buf[bytes_read] = 0;
 		ret = join(ret, buf);
+		if (!ret)
+			return (NULL);
 		if (ft_strchr(ret, '\n'))
 			break ;
 	}
@@ -102,10 +104,14 @@ char	*read_and_stash(int fd, char *ret)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[1000];
+	static char	*stash[OPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+		return (NULL);
+	if (!stash[fd])
+		stash[fd] = ft_calloc(1, 1);
+	if (!stash[fd])
 		return (NULL);
 	stash[fd] = read_and_stash(fd, stash[fd]);
 	if (!stash[fd])
