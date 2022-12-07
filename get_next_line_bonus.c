@@ -6,7 +6,7 @@
 /*   By: vmustone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:08:09 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/02 11:14:48 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/07 15:51:35 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*join(char *stash, char *buf)
 	return (temp);
 }
 
-static char	*after_newline(char *stash)
+static char	*after_newline(char *stash, int *error)
 {
 	int		i;
 	int		j;
@@ -34,17 +34,18 @@ static char	*after_newline(char *stash)
 	if (!stash[i])
 	{
 		free (stash);
-		stash = NULL;
 		return (NULL);
 	}
 	end_line = (char *)malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
 	if (!end_line)
+	{
+		*error = 1;
 		return (NULL);
+	}
 	i++;
 	while (stash[i])
 		end_line[j++] = stash[i++];
 	free(stash);
-	stash = NULL;
 	end_line[j] = '\0';
 	return (end_line);
 }
@@ -83,7 +84,7 @@ static char	*read_and_stash(int fd, char *ret)
 	if (!buf)
 		return (NULL);
 	bytes_read = 1;
-	while (bytes_read > 0)
+	while (bytes_read > 0 && !ft_strchr(ret, '\n'))
 	{
 		bytes_read = read(fd, buf, BUFFER_SIZE);
 		if (bytes_read == -1)
@@ -95,8 +96,6 @@ static char	*read_and_stash(int fd, char *ret)
 		ret = join(ret, buf);
 		if (!ret)
 			return (NULL);
-		if (ft_strchr(ret, '\n'))
-			break ;
 	}
 	free(buf);
 	return (ret);
@@ -106,8 +105,10 @@ char	*get_next_line(int fd)
 {
 	static char	*stash[OPEN_MAX];
 	char		*line;
+	int			error;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+	error = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	if (!stash[fd])
 		stash[fd] = ft_calloc(1, 1);
@@ -117,6 +118,11 @@ char	*get_next_line(int fd)
 	if (!stash[fd])
 		return (NULL);
 	line = find_newline(stash[fd]);
-	stash[fd] = after_newline(stash[fd]);
+	stash[fd] = after_newline(stash[fd], &error);
+	if (error)
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }

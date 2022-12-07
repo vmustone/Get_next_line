@@ -6,7 +6,7 @@
 /*   By: vmustone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 12:09:42 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/01 16:49:15 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:08:23 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;
@@ -26,6 +28,8 @@ char	*ft_strchr(const char *s, int c)
 {
 	char	*str;
 
+	if (!s)
+		return (NULL);
 	str = (char *)s;
 	while (*str != '\0')
 	{
