@@ -6,7 +6,7 @@
 /*   By: vmustone <vmustone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/23 16:58:47 by vmustone          #+#    #+#             */
-/*   Updated: 2022/12/07 15:50:42 by vmustone         ###   ########.fr       */
+/*   Updated: 2022/12/08 15:54:53 by vmustone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	int			error;
 
 	error = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || fd > 4096 || read(fd, 0, 0) < 0)
 		return (NULL);
 	if (!stash)
 		stash = ft_calloc(1, 1);
